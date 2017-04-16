@@ -7,7 +7,7 @@ Working in Progress
 
 Next Steps
 -------
-[ ] Remove Print / Add Logging
+[x] Remove Print / Add Logging
 
 [ ] Create a DockerFile
 

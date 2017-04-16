@@ -1,8 +1,13 @@
 from time import sleep
-from marathonAPI import MarathonAPI
-from rabbitMQ import rabbitMQ
 
+from autoScale.marathonAPI import MarathonAPI
+from autoScale.rabbitMQ import rabbitMQ
+from autoScale.settings import logger
+
+logger.info('Configurating MarathonAPI...')
 host = MarathonAPI(host='192.168.99.100', port=8080)
+
+logger.info('Configurating RabbitMQ...')
 target  = rabbitMQ(host='192.168.99.100', user='user', password='password')
 
 stop = False

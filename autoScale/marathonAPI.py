@@ -1,5 +1,5 @@
-from marathon import MarathonClient, MarathonHttpError
-from settings import *
+from marathon import MarathonHttpError, MarathonClient
+from autoScale.settings import logger, LABEL_FOR_AUTOSCALE_ENABLE, MANDATORY_LABELS_APP, OPTIONAL_LABELS_APP
 
 
 class MarathonApp(object):
@@ -73,20 +73,31 @@ class MarathonAPI(object):
         self.use_https = use_https
         self.port = str(port)
         self.url = '{}://{}:{}/'.format('https' if use_https else 'http', host, port)
-        self.marathon_cli = MarathonClient([self.url],username=self.user, password=self.password)
+        try:
+            self.marathon_cli = MarathonClient([self.url],username=self.user, password=self.password)
+        except Exception as e:
+            logger.critical(e)
+            raise e
 
     def scaleOneApp(self, app_id, delta=None):
-        print('Scale {} App: [{}] Delta:[{}] Atual:[{}] Staged:[{}]'.format('up' if delta > 0 else 'down', app_id, delta, self.dict_apps[app_id].tasksRunning, self.dict_apps[app_id].tasksStaged))
+        logger.info('App: [{}] :: Scale {} Delta:[{}] Atual:[{}] Staged:[{}]'.format(app_id,
+                                                                                     'up' if delta > 0 else 'down',
+                                                                                     delta,
+                                                                                     self.dict_apps[app_id].tasksRunning,
+                                                                                     self.dict_apps[app_id].tasksStaged))
         try:
             self.marathon_cli.scale_app(app_id=app_id, delta=delta)
         except MarathonHttpError as e:
-            print(e.error_message)
+            logger.error(e.error_message)
         except:
             raise
 
 
     def findAppsWithAutoscaleLabels(self):
         list = self.marathon_cli.list_apps(embed_counts=True, embed_task_stats=True)
+        logger.critical('Lista recebida {}'.format(list))
+        if len(list) == 0:
+            logger.warning('0 apps loaded. Your marathon have apps?')
         for app in list:
             if LABEL_FOR_AUTOSCALE_ENABLE in app.labels:
                 new_app = MarathonApp(app.id)
@@ -99,7 +110,7 @@ class MarathonAPI(object):
                             value = int(value)
                         new_app.__setattr__(label, value)
                     else:
-                        print('App {} dont have MANDATORY_LABELS :: {}'.format(app.id, label))
+                        logger.error('App: [{}] :: dont have MANDATORY_LABELS :: {}'.format(app.id, label))
                 for label in OPTIONAL_LABELS_APP:
                     if label in app.labels:
                         value = app.labels[label]
@@ -107,6 +118,8 @@ class MarathonAPI(object):
                             value = int(value)
                         new_app.__setattr__(label, value)
                 self.dict_apps[app.id] = new_app
+            else:
+                logger.debug('App: [{}] :: dont have {} = True. If you want to scale, please add labels.'.format(app.id, LABEL_FOR_AUTOSCALE_ENABLE))
 
     def scaleApps(self, rabbitmq):
         for app_id in self.dict_apps:
@@ -115,4 +128,4 @@ class MarathonAPI(object):
             if required:
                 self.scaleOneApp(app_id=app_id, delta=delta)
             else:
-                print('Not Required Scale App: [{}]'.format(app_id))
+                logger.info('App: [{}] :: Not Required Scale'.format(app_id))

@@ -1,6 +1,9 @@
 import os
 
+import logging
+
 MARATHON_INTERVAL_REFRESH_APP=os.getenv("MARATHON_INTERVAL_REFRESH_APP",60)
+
 
 LABEL_FOR_AUTOSCALE_ENABLE = 'AUTOSCALE_ENABLE'
 LABEL_FOR_AUTOSCALE_RMQ_QUEUE = 'AUTOSCALE_RMQ_QUEUE'
@@ -20,3 +23,11 @@ OPTIONAL_LABELS_APP = [LABEL_FOR_AUTOSCALE_RMQ_VHOST,
                        LABEL_FOR_AUTOSCALE_RMQ_MIN_INSTANCES,
                        LABEL_FOR_AUTOSCALE_RMQ_INCREMENT_INSTANCES,
                        LABEL_FOR_AUTOSCALE_RMQ_DECREMENT_INSTANCES]
+
+
+
+DEBUG = True
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG if DEBUG else logging.WARNING)
