@@ -2,6 +2,7 @@ from marathonAPI import MarathonAPI
 from rabbitMQ import rabbitMQ
 from settings import VAR_MARATHON_PORT, VAR_MARATHON_USE_HTTPS, VAR_MARATHON_PASSWORD, VAR_MARATHON_USER, \
     VAR_RABBITMQ_WEB_PORT, VAR_RABBITMQ_PASSWORD, VAR_RABBITMQ_USER, VAR_RABBITMQ_HOST
+from settings import MARATHON_INTERVAL_REFRESH_APP
 from settings import logger, VAR_MARATHON_HOST
 
 logger.info('Configurating MarathonAPI...')
@@ -20,7 +21,7 @@ def callback(n, loop):
 
 
 async def main(loop):
-    delta_time = 10
+    delta_time = MARATHON_INTERVAL_REFRESH_APP
     loop.call_soon(callback, delta_time, loop)
     while True:
         await asyncio.sleep(1)

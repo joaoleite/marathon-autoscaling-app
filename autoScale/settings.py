@@ -42,7 +42,7 @@ VAR_RABBITMQ_WEB_PORT = os.getenv('VAR_RABBITMQ_WEB_PORT', '15672')
 
 
 
-DEBUG = True
+DEBUG = os.getenv("DEBUG",False) in TRUE_LIST
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
