@@ -1,7 +1,7 @@
 from pyrabbit.api import Client
 from pyrabbit.http import HTTPError
 
-from autoScale.settings import logger
+from settings import logger
 
 
 class rabbitMQ:

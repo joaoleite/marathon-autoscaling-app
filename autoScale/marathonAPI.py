@@ -1,5 +1,6 @@
 from marathon import MarathonHttpError, MarathonClient
-from autoScale.settings import logger, LABEL_FOR_AUTOSCALE_ENABLE, MANDATORY_LABELS_APP, OPTIONAL_LABELS_APP
+
+from settings import logger, LABEL_FOR_AUTOSCALE_ENABLE, MANDATORY_LABELS_APP, OPTIONAL_LABELS_APP
 
 
 class MarathonApp(object):
@@ -51,10 +52,6 @@ class MarathonApp(object):
             required = True
 
         return [required, delta]
-
-
-
-
 
 class MarathonAPI(object):
     user = None

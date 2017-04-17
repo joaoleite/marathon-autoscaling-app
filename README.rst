@@ -9,9 +9,9 @@ Next Steps
 -------
 [x] Remove Print / Add Logging
 
-[ ] Create a DockerFile
+[x] Create a DockerFile
 
-[ ] Create on Docker Hub
+[x] Create on Docker Hub
 
 [ ] Remove pyrabbit / Create my own rabbit api request
 
