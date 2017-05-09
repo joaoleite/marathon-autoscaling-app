@@ -13,11 +13,14 @@ target  = rabbitMQ(host=VAR_RABBITMQ_HOST, user=VAR_RABBITMQ_USER, password=VAR_
 
 import asyncio
 def callback(n, loop):
-    host.findAppsWithAutoscaleLabels()
-    host.scaleApps(target)
-
-    now = loop.time()
-    loop.call_at(now + n, callback, n, loop)
+    try:
+        host.findAppsWithAutoscaleLabels()
+        host.scaleApps(target)
+    except Exception as e:
+        logger.error(e)
+    finally:
+        now = loop.time()
+        loop.call_at(now + n, callback, n, loop)
 
 
 async def main(loop):

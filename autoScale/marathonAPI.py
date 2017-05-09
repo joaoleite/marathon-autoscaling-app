@@ -92,7 +92,7 @@ class MarathonAPI(object):
 
     def findAppsWithAutoscaleLabels(self):
         list = self.marathon_cli.list_apps(embed_counts=True, embed_task_stats=True)
-        logger.critical('Lista recebida {}'.format(list))
+        logger.debug('Lista recebida {}'.format(list))
         if len(list) == 0:
             logger.warning('0 apps loaded. Your marathon have apps?')
         for app in list:

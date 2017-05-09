@@ -6,7 +6,7 @@ import logging
 TRUE_LIST = ('true', 'True', 'TRUE', '1', True)
 
 
-MARATHON_INTERVAL_REFRESH_APP=os.getenv("MARATHON_INTERVAL_REFRESH_APP",60)
+MARATHON_INTERVAL_REFRESH_APP=int(os.getenv("MARATHON_INTERVAL_REFRESH_APP",60))
 
 
 LABEL_FOR_AUTOSCALE_ENABLE = 'AUTOSCALE_ENABLE'
@@ -43,7 +43,8 @@ VAR_RABBITMQ_WEB_PORT = os.getenv('VAR_RABBITMQ_WEB_PORT', '15672')
 
 
 DEBUG = os.getenv("DEBUG",False) in TRUE_LIST
+LOGGER_LEVEL = os.getenv("LOGGER_LEVEL",logging.WARNING)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG if DEBUG else logging.WARNING)
+logger.setLevel(logging.DEBUG if DEBUG else LOGGER_LEVEL)
